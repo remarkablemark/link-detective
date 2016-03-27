@@ -16,7 +16,9 @@ let createWindow = () => {
         width: 800,
         height: 600
     });
-    mainWindow.loadURL(path.join('file://', __dirname, 'index.html'));
+
+    mainWindow.loadURL(path.join('file://', __dirname, 'app/index.html'));
+
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
