@@ -2,6 +2,10 @@
   "name": "link-detective",
   "version": "0.0.1",
   "description": "Broken link detector.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron main.js"
+  },
   "keywords": [
     "broken link checker",
     "find broken link",
@@ -12,5 +16,8 @@
     "Electron"
   ],
   "author": "remarkablemark",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "electron-prebuilt": "^0.37.2"
+  }
 }
