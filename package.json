@@ -4,7 +4,8 @@
   "description": "Broken link detector.",
   "main": "main.js",
   "scripts": {
-    "start": "electron main.js"
+    "start": "electron main.js",
+    "dev": "NODE_ENV=development electron main.js"
   },
   "keywords": [
     "broken link checker",
