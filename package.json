@@ -1,0 +1,16 @@
+{
+  "name": "link-detective",
+  "version": "0.0.1",
+  "description": "Broken link detector.",
+  "keywords": [
+    "broken link checker",
+    "find broken link",
+    "broken link",
+    "dead link",
+    "link rot",
+    "dangling link",
+    "Electron"
+  ],
+  "author": "remarkablemark",
+  "license": "MIT"
+}
