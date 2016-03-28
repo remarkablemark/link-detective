@@ -9,7 +9,53 @@
     </head>
     <body>
         <div class="container">
-            <h1 class="text-center">Link Detective</h1>
+            <h1 class="text-center text-muted">Link Detective</h1>
+            <br />
+
+            <!-- nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active">
+                    <a href="#links" aria-controls="links" role="tab" data-toggle="tab">
+                        Links
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="#result" aria-controls="result" role="tab" data-toggle="tab">
+                        Result
+                    </a>
+                </li>
+            </ul>
+            <!-- end nav tabs -->
+
+            <!-- tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="links">
+                    <br />
+                    <p class="lead">Links:</p>
+                    <textarea class="form-control" rows="10"></textarea>
+                    <br />
+                    <button type="submit" class="btn btn-primary" id="verify">
+                        Verify
+                    </button>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="result">
+                    <br />
+                    <p class="lead">Result:</p>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>URL</th>
+                                <th>Status</th>
+                                <th>Type</th>
+                                <th>Length</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- end tab panes -->
         </div>
 
         <!-- jQuery -->
