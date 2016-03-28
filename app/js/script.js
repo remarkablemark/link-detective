@@ -84,9 +84,9 @@ $(document).ready(() => {
     $filter.keyup(() => {
         let $tr = $tbody.find('tr');
         $tr.hide();
-        let regex = new RegExp($filter.val(), 'gim');
+        let filterText = $filter.val().toLowerCase();
         $tr.filter(function() {
-            return regex.test($(this).text());
+            return $(this).text().indexOf(filterText) > -1;
         }).show();
     });
 });
