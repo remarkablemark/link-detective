@@ -1,11 +1,20 @@
 $(document).ready(() => {
     'use strict';
 
+    /**
+     * Module dependencies.
+     */
+    const resolve = require('url').resolve;
+
     /** Cache all selectors. */
     let $verifyBtn = $('#verify');
     let $resultTab = $('.nav-tabs').find('a[href="#result"]');
     let $tbody = $('.table').find('tbody');
     let $linksTextarea = $('#links').find('textarea');
+    let $prefix = $('#prefix');
+
+    /** Initialize all opt-in functionality. */
+    $('[data-toggle="tooltip"]').tooltip();
 
     /**
      * Append link request result to table body.
@@ -27,12 +36,9 @@ $(document).ready(() => {
         // invalid url
         if (statusCode === 0) {
             context = 'warning';
-        // success
-        } else if (statusCode < 300) {
-            context = '';
-        // redirect
+        // success/redirect
         } else if (statusCode < 400) {
-            context = 'info';
+            context = '';
         // error
         } else {
             context = 'danger';
@@ -57,7 +63,7 @@ $(document).ready(() => {
 
         var links = $linksTextarea.val().trim().split('\n');
         links.forEach((link, index) => {
-            let url = link.trim();
+            let url = resolve($prefix.val(), link);
             let request = $.ajax({
                 method: 'HEAD',
                 url: url

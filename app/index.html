@@ -19,6 +19,7 @@
                         Links
                     </a>
                 </li>
+
                 <li role="presentation">
                     <a href="#result" aria-controls="result" role="tab" data-toggle="tab">
                         Result
@@ -33,11 +34,32 @@
                     <br />
                     <p class="text-muted">Make sure to separate each url link by a newline.</p>
                     <textarea class="form-control" rows="10"></textarea>
+
                     <br />
+                    <div>
+                        <a class="text-muted" role="button" data-toggle="collapse" href="#advanced-options" style="text-decoration:none;">
+                            <span class="caret"></span>
+                            Advanced Options
+                        </a>
+                    </div>
+                    <div class="collapse" id="advanced-options">
+                        <br />
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" data-toggle="tooltip" data-placement="top" title="Inserts prefix to each link.">
+                                    Prefix
+                                </span>
+                                <input type="text" class="form-control" id="prefix" placeholder="http://www.domain.com" />
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+
                     <button type="submit" class="btn btn-primary" id="verify">
                         Verify
                     </button>
                 </div>
+
                 <div role="tabpanel" class="tab-pane" id="result">
                     <br />
                     <table class="table table-hover">
