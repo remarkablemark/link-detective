@@ -12,6 +12,7 @@ $(document).ready(() => {
     let $tbody = $('.table').find('tbody');
     let $linksTextarea = $('#links').find('textarea');
     let $prefix = $('#prefix');
+    let $filter = $('#filter');
 
     /** Initialize all opt-in functionality. */
     $('[data-toggle="tooltip"]').tooltip();
@@ -77,5 +78,15 @@ $(document).ready(() => {
                 appendResult(index + 1, url, jqXHR);
             });
         });
+    });
+
+    /** Filter the results. */
+    $filter.keyup(() => {
+        let $tr = $tbody.find('tr');
+        $tr.hide();
+        let regex = new RegExp($filter.val(), 'gim');
+        $tr.filter(function() {
+            return regex.test($(this).text());
+        }).show();
     });
 });
