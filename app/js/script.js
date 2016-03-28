@@ -20,14 +20,18 @@ $(document).ready(() => {
     /**
      * Append link request result to table body.
      *
-     * @param {Number} index - The index position of the link.
-     * @param {String} url   - The link url.
-     * @param {Object} jqXHR - The jQuery XHR object.
+     * @param {Object} options
+     * @param {Number} options.index      - The index position of link.
+     * @param {String} options.url        - The link url.
+     * @param {Object} options.jqXHR      - The jQuery XHR object.
+     * @param {Object} options.textStatus - The text message/status.
      */
-    let appendResult = (index, url, jqXHR) => {
-        index = index || '';
-        url = url || '';
-        jqXHR = jqXHR || {};
+    function appendResult(options) {
+        options = options || {};
+        let index = options.index || '';
+        let url = options.url || '';
+        let jqXHR = options.jqXHR || {};
+        let textStatus = options.textStatus || '';
 
         let statusCode = jqXHR.status;
         let contentType = jqXHR.getResponseHeader('content-type');
@@ -52,6 +56,7 @@ $(document).ready(() => {
                 <td>${statusCode}</td>
                 <td>${contentType}</td>
                 <td>${contentLength}</td>
+                <td>${textStatus}</td>
             </tr>`
         );
     };
@@ -71,11 +76,21 @@ $(document).ready(() => {
             });
 
             request.done((message, textStatus, jqXHR) => {
-                appendResult(index + 1, url, jqXHR);
+                appendResult({
+                    index: index + 1,
+                    url: url,
+                    jqXHR: jqXHR,
+                    textStatus: textStatus
+                });
             });
 
             request.fail((jqXHR, textStatus) => {
-                appendResult(index + 1, url, jqXHR);
+                appendResult({
+                    index: index + 1,
+                    url: url,
+                    jqXHR: jqXHR,
+                    textStatus: textStatus
+                });
             });
         });
     });
