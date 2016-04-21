@@ -23,6 +23,10 @@
     "type": "git",
     "url": "https://github.com/remarkablemark/link-detective"
   },
+  "dependencies": {
+    "bootstrap": "^3.3.6",
+    "jquery": "^2.2.3"
+  },
   "devDependencies": {
     "electron-debug": "^0.6.0",
     "electron-prebuilt": "^0.37.2",
