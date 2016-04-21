@@ -38,6 +38,8 @@ $(document).ready(() => {
         let url = options.url || '';
         let jqXHR = options.jqXHR || {};
         let textStatus = options.textStatus || '';
+        // change the text status "nocontent" to something more meaningful
+        let message = textStatus === 'nocontent' ? 'success' : textStatus;
 
         let statusCode = jqXHR.status;
         let contentType = jqXHR.getResponseHeader('content-type');
@@ -62,7 +64,7 @@ $(document).ready(() => {
                 <td>${statusCode}</td>
                 <td>${contentType}</td>
                 <td>${contentLength}</td>
-                <td>${textStatus}</td>
+                <td>${message}</td>
             </tr>`
         );
     };
