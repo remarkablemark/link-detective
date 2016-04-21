@@ -4,9 +4,14 @@
  * Module dependencies.
  */
 const electron = require('electron');
-const app = electron.app;
 const path = require('path');
+
+const isDevelopment = process.env.NODE_ENV === 'development';
 let mainWindow;
+
+if (isDevelopment) {
+    require('electron-reload')(__dirname);
+}
 
 /**
  * Create the main browser window.
@@ -18,7 +23,7 @@ let createWindow = () => {
     });
     mainWindow.loadURL(path.join('file://', __dirname, 'app/index.html'));
 
-    if (process.env.NODE_ENV === 'development') {
+    if (isDevelopment) {
         mainWindow.webContents.openDevTools();
     }
 
@@ -30,15 +35,15 @@ let createWindow = () => {
 /**
  * App.
  */
-app.on('ready', createWindow);
+electron.app.on('ready', createWindow);
 
-app.on('window-all-closed', () => {
+electron.app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         app.quit();
     }
 });
 
-app.on('activate', () => {
+electron.app.on('activate', () => {
     if (mainWindow === null) {
         createWindow();
     }
