@@ -6,12 +6,12 @@
 const electron = require('electron');
 const path = require('path');
 
-const isDevelopment = process.env.NODE_ENV === 'development';
-let mainWindow;
-
-if (isDevelopment) {
+if (process.env.NODE_ENV === 'development') {
     require('electron-reload')(__dirname);
+    require('electron-debug')({ showDevTools: true });
 }
+
+let mainWindow;
 
 /**
  * Create the main browser window.
@@ -22,10 +22,6 @@ let createWindow = () => {
         height: 600
     });
     mainWindow.loadURL(path.join('file://', __dirname, 'app/index.html'));
-
-    if (isDevelopment) {
-        mainWindow.webContents.openDevTools();
-    }
 
     mainWindow.on('closed', () => {
         mainWindow = null;
