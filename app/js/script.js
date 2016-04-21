@@ -14,6 +14,12 @@ $(document).ready(() => {
     let $prefix = $('#prefix');
     let $filter = $('#filter');
 
+    /** Update textarea placeholder. */
+    $linksTextarea.attr('placeholder', [
+        'http://www.domain.com',
+        'http://example.org'
+    ].join('\n'));
+
     /** Initialize all opt-in functionality. */
     $('[data-toggle="tooltip"]').tooltip();
 
