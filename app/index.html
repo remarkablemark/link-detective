@@ -2,7 +2,6 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Link Detective</title>
         <!-- Bootstrap -->
         <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css" />
@@ -12,7 +11,6 @@
             <h1 class="text-center text-muted">Link Detective</h1>
             <br />
 
-            <!-- nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active">
                     <a href="#links" aria-controls="links" role="tab" data-toggle="tab">
@@ -25,46 +23,33 @@
                         Result
                     </a>
                 </li>
-            </ul>
-            <!-- end nav tabs -->
+            </ul><!-- / .nav-tabs -->
 
-            <!-- tab panes -->
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="links">
                     <br />
-                    <p class="text-muted">Make sure to separate each url link by a newline.</p>
-                    <textarea class="form-control" rows="10" placeholder="http://www.domain.com"></textarea>
-
-                    <br />
-                    <div>
-                        <a class="text-muted" role="button" data-toggle="collapse" href="#advanced-options" style="text-decoration:none;">
-                            <span class="caret"></span>
-                            Advanced Options
-                        </a>
-                    </div>
-                    <div class="collapse" id="advanced-options">
-                        <br />
-                        <div class="form-group">
-                            <div class="input-group">
-                                <span class="input-group-addon" data-toggle="tooltip" data-placement="top" title="Inserts prefix to each link.">
-                                    Prefix
-                                </span>
-                                <input type="text" class="form-control" id="prefix" placeholder="http://www.domain.com" />
-                            </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon" data-toggle="tooltip" data-placement="right" title="Optional: prepends each link with the base url.">
+                                Base*
+                            </span>
+                            <input type="text" class="form-control" id="base" placeholder="http://www.domain.com" />
                         </div>
                     </div>
+
+                    <textarea class="form-control" rows="10" data-toggle="tooltip" data-placement="bottom" title="Paste your links here."></textarea>
                     <br />
 
-                    <button type="submit" class="btn btn-primary" id="verify">
-                        Verify
+                    <button type="submit" class="btn btn-primary" id="search">
+                        Search
                     </button>
-                </div>
+                </div><!-- / #links -->
 
                 <div role="tabpanel" class="tab-pane" id="result">
                     <br />
                     <div class="input-group">
-                        <span class="input-group-addon">
-                            Filter
+                        <span class="input-group-addon" data-toggle="tooltip" data-placement="right" title="Optional: filters the search results.">
+                            Filter*
                         </span>
                         <input type="text" class="form-control" id="filter" />
                     </div>
@@ -82,9 +67,9 @@
                         </thead>
                         <tbody></tbody>
                     </table>
-                </div>
-            </div>
-            <!-- end tab panes -->
+                </div><!-- / #result -->
+
+            </div><!-- / .tab-content -->
         </div>
 
         <!-- jQuery -->

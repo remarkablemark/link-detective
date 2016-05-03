@@ -6,18 +6,17 @@ $(document).ready(() => {
      */
     const resolve = require('url').resolve;
 
-    /** Cache all selectors. */
-    let $verifyBtn = $('#verify');
+    /** Cache selectors. */
     let $resultTab = $('.nav-tabs').find('a[href="#result"]');
     let $tbody = $('.table').find('tbody');
-    let $linksTextarea = $('#links').find('textarea');
-    let $prefix = $('#prefix');
+    let $textarea = $('#links').find('textarea');
     let $filter = $('#filter');
+    let $baseUrl = $('#base');
 
     /** Update textarea placeholder. */
-    $linksTextarea.attr('placeholder', [
-        'http://www.domain.com',
-        'http://example.org'
+    $textarea.attr('placeholder', [
+        '/path/page.html',
+        'http://example.com'
     ].join('\n'));
 
     /** Initialize all opt-in functionality. */
@@ -69,15 +68,15 @@ $(document).ready(() => {
         );
     };
 
-    /** Verify the links. */
-    $verifyBtn.click((event) => {
+    /** Search and validate the links. */
+    $('#search').click((event) => {
         event.preventDefault();
         $tbody.empty();
         $resultTab.tab('show');
 
-        var links = $linksTextarea.val().trim().split('\n');
+        let links = $textarea.val().trim().split('\n');
         links.forEach((link, index) => {
-            let url = resolve($prefix.val(), link);
+            let url = resolve($baseUrl.val(), link);
             let request = $.ajax({
                 method: 'HEAD',
                 url: url
