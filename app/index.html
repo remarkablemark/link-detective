@@ -37,7 +37,7 @@
                         </div>
                     </div>
 
-                    <textarea class="form-control" rows="10" data-toggle="tooltip" data-placement="bottom" title="Paste your links here."></textarea>
+                    <textarea class="form-control" rows="10" data-toggle="tooltip" data-placement="bottom" title="Paste your links here." style="height: 275px; resize: vertical;"></textarea>
                     <br />
 
                     <button type="submit" class="btn btn-primary" id="search">
@@ -54,19 +54,22 @@
                         <input type="text" class="form-control" id="filter" />
                     </div>
                     <br />
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>URL</th>
-                                <th>Status</th>
-                                <th>Content-Type</th>
-                                <th>Content-Length</th>
-                                <th>Message</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
+
+                    <div class="table-responsive" style="height: 300px;">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>URL</th>
+                                    <th>Status</th>
+                                    <th>Content-Type</th>
+                                    <th>Content-Length</th>
+                                    <th>Message</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div><!-- / .table-responsive -->
                 </div><!-- / #result -->
 
             </div><!-- / .tab-content -->
