@@ -1,10 +1,17 @@
-$(document).ready(() => {
-    'use strict';
+'use strict';
 
-    /**
-     * Module dependencies.
-     */
-    const resolve = require('url').resolve;
+/**
+ * Module dependencies.
+ */
+const resolve = require('url').resolve;
+const isWebUri = require('valid-url').isWebUri;
+
+/**
+ * Document ready.
+ */
+$(document).ready(() => {
+    let validLinks;
+    let invalidLinks;
 
     /** Cache selectors. */
     let $resultTab = $('.nav-tabs').find('a[href="#result"]');
@@ -12,6 +19,10 @@ $(document).ready(() => {
     let $textarea = $('#links').find('textarea');
     let $filter = $('#filter');
     let $baseUrl = $('#base');
+    let $modal = $('#modal');
+    let $modalTitle = $modal.find('.modal-title');
+    let $modalBody = $modal.find('.modal-body');
+    let $modalFooter = $modal.find('.modal-footer');
 
     /** Update textarea placeholder. */
     $textarea.attr('placeholder', [
@@ -68,15 +79,88 @@ $(document).ready(() => {
         );
     };
 
-    /** Search and validate the links. */
-    $('#search').click((event) => {
-        event.preventDefault();
-        $tbody.empty();
-        $resultTab.tab('show');
+    /**
+     * Get valid or invalid urls.
+     *
+     * @param  {Boolean}        type - The type: 'valid' or 'invalid'.
+     * @param  {(Array|String)} urls - The urls.
+     * @param  {String} baseUrl      - The base url.
+     * @return {Array}
+     */
+    function getUrls(type, urls, baseUrl) {
+        if (typeof urls === 'string') {
+            urls = urls.trim().split('\n');
+        }
 
-        let links = $textarea.val().trim().split('\n');
+        if (type === 'valid') {
+            return urls.filter((url) => {
+                url = url.trim();
+                return isWebUri(url) || isWebUri(resolve(baseUrl, url));
+            });
+
+        } else if (type === 'invalid') {
+            return urls.filter((url) => {
+                url = url.trim();
+                return !(isWebUri(url) || isWebUri(resolve(baseUrl, url)));
+            });
+        }
+    }
+
+    /** Validate the links again. */
+    $('#modal-update').click(() => {
+        let updatedLinks = $modal.find('textarea').val().trim().split('\n');
+        const baseUrl = $baseUrl.val().trim();
+        invalidLinks = getUrls('invalid', updatedLinks, baseUrl);
+
+        if (invalidLinks.length) {
+            let content = generateModalContent(invalidLinks);
+            $modalTitle.text(content.title);
+            $modalBody.html(content.body);
+            $modal.modal('show');
+        } else {
+            $tbody.empty();
+            $modal.modal('hide');
+            $resultTab.tab('show');
+            verifyLinks(validLinks.concat(updatedLinks), baseUrl);
+        }
+    });
+
+    /** Continue and verify links. */
+    $('#modal-continue').click(() => {
+        $tbody.empty();
+        $modal.modal('hide');
+        $resultTab.tab('show');
+        verifyLinks(validLinks.concat(invalidLinks), $baseUrl.val().trim());
+    });
+
+    /**
+     * Generate modal content based on invalid links.
+     *
+     * @param  {Array} invalidLinks - The invalid links.
+     * @return {String}
+     */
+    function generateModalContent(invalidLinks) {
+        return {
+            title: `${invalidLinks.length} invalid urls`,
+            body: `
+                <p>The following urls are invalid:</p>
+                <textarea class='form-control' rows='5' style='resize: vertical;'>${invalidLinks.join('\n')}</textarea>
+                <br>
+                <p>You can either fix and update them or continue the search with the current urls.<p>
+            `
+        };
+    }
+
+    /**
+     * Verify the links via the HEAD request.
+     *
+     * @param  {Array} links   - The links.
+     * @param  {Array} baseUrl - The base url.
+     */
+    function verifyLinks(links, baseUrl) {
         links.forEach((link, index) => {
-            let url = resolve($baseUrl.val(), link);
+            const url = resolve(baseUrl, link);
+
             let request = $.ajax({
                 method: 'HEAD',
                 url: url
@@ -100,6 +184,27 @@ $(document).ready(() => {
                 });
             });
         });
+    }
+
+    /** Validate the links before making the requests. */
+    $('#search').click((event) => {
+        event.preventDefault();
+
+        const baseUrl = $baseUrl.val().trim();
+        let links = $textarea.val().trim().split('\n');
+        validLinks = getUrls('valid', links, baseUrl);
+        invalidLinks = getUrls('invalid', links, baseUrl);
+
+        if (invalidLinks.length) {
+            let content = generateModalContent(invalidLinks);
+            $modalTitle.text(content.title);
+            $modalBody.html(content.body);
+            $modal.modal('show');
+        } else {
+            $tbody.empty();
+            $resultTab.tab('show');
+            verifyLinks(links, baseUrl);
+        }
     });
 
     /** Filter the results. */
