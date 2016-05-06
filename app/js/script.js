@@ -14,15 +14,15 @@ $(document).ready(() => {
     let invalidLinks;
 
     /** Cache selectors. */
-    let $resultTab = $('.nav-tabs').find('a[href="#result"]');
-    let $tbody = $('.table').find('tbody');
-    let $textarea = $('#links').find('textarea');
-    let $filter = $('#filter');
-    let $baseUrl = $('#base');
-    let $modal = $('#modal');
-    let $modalTitle = $modal.find('.modal-title');
-    let $modalBody = $modal.find('.modal-body');
-    let $modalFooter = $modal.find('.modal-footer');
+    const $resultTab = $('.nav-tabs').find('a[href="#result"]');
+    const $tbody = $('.table').find('tbody');
+    const $textarea = $('#links').find('textarea');
+    const $filter = $('#filter');
+    const $baseUrl = $('#base');
+    const $modal = $('#modal');
+    const $modalTitle = $modal.find('.modal-title');
+    const $modalBody = $modal.find('.modal-body');
+    const $modalFooter = $modal.find('.modal-footer');
 
     /** Update textarea placeholder. */
     $textarea.attr('placeholder', [
@@ -44,16 +44,16 @@ $(document).ready(() => {
      */
     function appendResult(options) {
         options = options || {};
-        let index = options.index || '';
-        let url = options.url || '';
-        let jqXHR = options.jqXHR || {};
-        let textStatus = options.textStatus || '';
+        const index = options.index || '';
+        const url = options.url || '';
+        const jqXHR = options.jqXHR || {};
+        const textStatus = options.textStatus || '';
         // change the text status "nocontent" to something more meaningful
-        let message = textStatus === 'nocontent' ? 'success' : textStatus;
+        const message = textStatus === 'nocontent' ? 'success' : textStatus;
 
-        let statusCode = jqXHR.status;
-        let contentType = jqXHR.getResponseHeader('content-type');
-        let contentLength = jqXHR.getResponseHeader('content-length');
+        const statusCode = jqXHR.status;
+        const contentType = jqXHR.getResponseHeader('content-type');
+        const contentLength = jqXHR.getResponseHeader('content-length');
 
         let context;
         // invalid url
@@ -108,12 +108,12 @@ $(document).ready(() => {
 
     /** Validate the links again. */
     $('#modal-update').click(() => {
-        let updatedLinks = $modal.find('textarea').val().trim().split('\n');
+        const updatedLinks = $modal.find('textarea').val().trim().split('\n');
         const baseUrl = $baseUrl.val().trim();
         invalidLinks = getUrls('invalid', updatedLinks, baseUrl);
 
         if (invalidLinks.length) {
-            let content = generateModalContent(invalidLinks);
+            const content = generateModalContent(invalidLinks);
             $modalTitle.text(content.title);
             $modalBody.html(content.body);
             $modal.modal('show');
@@ -161,7 +161,7 @@ $(document).ready(() => {
         links.forEach((link, index) => {
             const url = resolve(baseUrl, link);
 
-            let request = $.ajax({
+            const request = $.ajax({
                 method: 'HEAD',
                 url: url
             });
@@ -191,12 +191,12 @@ $(document).ready(() => {
         event.preventDefault();
 
         const baseUrl = $baseUrl.val().trim();
-        let links = $textarea.val().trim().split('\n');
+        const links = $textarea.val().trim().split('\n');
         validLinks = getUrls('valid', links, baseUrl);
         invalidLinks = getUrls('invalid', links, baseUrl);
 
         if (invalidLinks.length) {
-            let content = generateModalContent(invalidLinks);
+            const content = generateModalContent(invalidLinks);
             $modalTitle.text(content.title);
             $modalBody.html(content.body);
             $modal.modal('show');
@@ -209,9 +209,9 @@ $(document).ready(() => {
 
     /** Filter the results. */
     $filter.keyup(() => {
-        let $tr = $tbody.find('tr');
+        const $tr = $tbody.find('tr');
         $tr.hide();
-        let filterText = $filter.val().toLowerCase();
+        const filterText = $filter.val().toLowerCase();
         $tr.filter(function() {
             return $(this).text().indexOf(filterText) > -1;
         }).show();
