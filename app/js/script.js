@@ -1,17 +1,28 @@
-$(document).ready(() => {
-    'use strict';
+'use strict';
 
-    /**
-     * Module dependencies.
-     */
-    const resolve = require('url').resolve;
+/**
+ * Module dependencies.
+ */
+const resolve = require('url').resolve;
+const isWebUri = require('valid-url').isWebUri;
+
+/**
+ * Document ready.
+ */
+$(document).ready(() => {
+    let validLinks;
+    let invalidLinks;
 
     /** Cache selectors. */
-    let $resultTab = $('.nav-tabs').find('a[href="#result"]');
-    let $tbody = $('.table').find('tbody');
-    let $textarea = $('#links').find('textarea');
-    let $filter = $('#filter');
-    let $baseUrl = $('#base');
+    const $resultTab = $('.nav-tabs').find('a[href="#result"]');
+    const $tbody = $('.table').find('tbody');
+    const $textarea = $('#links').find('textarea');
+    const $filter = $('#filter');
+    const $baseUrl = $('#base');
+    const $modal = $('#modal');
+    const $modalTitle = $modal.find('.modal-title');
+    const $modalBody = $modal.find('.modal-body');
+    const $modalFooter = $modal.find('.modal-footer');
 
     /** Update textarea placeholder. */
     $textarea.attr('placeholder', [
@@ -33,16 +44,16 @@ $(document).ready(() => {
      */
     function appendResult(options) {
         options = options || {};
-        let index = options.index || '';
-        let url = options.url || '';
-        let jqXHR = options.jqXHR || {};
-        let textStatus = options.textStatus || '';
+        const index = options.index || '';
+        const url = options.url || '';
+        const jqXHR = options.jqXHR || {};
+        const textStatus = options.textStatus || '';
         // change the text status "nocontent" to something more meaningful
-        let message = textStatus === 'nocontent' ? 'success' : textStatus;
+        const message = textStatus === 'nocontent' ? 'success' : textStatus;
 
-        let statusCode = jqXHR.status;
-        let contentType = jqXHR.getResponseHeader('content-type');
-        let contentLength = jqXHR.getResponseHeader('content-length');
+        const statusCode = jqXHR.status;
+        const contentType = jqXHR.getResponseHeader('content-type');
+        const contentLength = jqXHR.getResponseHeader('content-length');
 
         let context;
         // invalid url
@@ -68,16 +79,89 @@ $(document).ready(() => {
         );
     };
 
-    /** Search and validate the links. */
-    $('#search').click((event) => {
-        event.preventDefault();
-        $tbody.empty();
-        $resultTab.tab('show');
+    /**
+     * Get valid or invalid urls.
+     *
+     * @param  {Boolean}        type - The type: 'valid' or 'invalid'.
+     * @param  {(Array|String)} urls - The urls.
+     * @param  {String} baseUrl      - The base url.
+     * @return {Array}
+     */
+    function getUrls(type, urls, baseUrl) {
+        if (typeof urls === 'string') {
+            urls = urls.trim().split('\n');
+        }
 
-        let links = $textarea.val().trim().split('\n');
+        if (type === 'valid') {
+            return urls.filter((url) => {
+                url = url.trim();
+                return isWebUri(url) || isWebUri(resolve(baseUrl, url));
+            });
+
+        } else if (type === 'invalid') {
+            return urls.filter((url) => {
+                url = url.trim();
+                return !(isWebUri(url) || isWebUri(resolve(baseUrl, url)));
+            });
+        }
+    }
+
+    /** Validate the links again. */
+    $('#modal-update').click(() => {
+        const updatedLinks = $modal.find('textarea').val().trim().split('\n');
+        const baseUrl = $baseUrl.val().trim();
+        invalidLinks = getUrls('invalid', updatedLinks, baseUrl);
+
+        if (invalidLinks.length) {
+            const content = generateModalContent(invalidLinks);
+            $modalTitle.text(content.title);
+            $modalBody.html(content.body);
+            $modal.modal('show');
+        } else {
+            $tbody.empty();
+            $modal.modal('hide');
+            $resultTab.tab('show');
+            verifyLinks(validLinks.concat(updatedLinks), baseUrl);
+        }
+    });
+
+    /** Continue and verify links. */
+    $('#modal-continue').click(() => {
+        $tbody.empty();
+        $modal.modal('hide');
+        $resultTab.tab('show');
+        verifyLinks(validLinks.concat(invalidLinks), $baseUrl.val().trim());
+    });
+
+    /**
+     * Generate modal content based on invalid links.
+     *
+     * @param  {Array} invalidLinks - The invalid links.
+     * @return {String}
+     */
+    function generateModalContent(invalidLinks) {
+        return {
+            title: `${invalidLinks.length} invalid urls`,
+            body: `
+                <p>The following urls are invalid:</p>
+                <textarea class='form-control' rows='5' style='resize: vertical;'>${invalidLinks.join('\n')}</textarea>
+                <br>
+                <p>You can either fix and update them or continue the search with the current urls.<p>
+            `
+        };
+    }
+
+    /**
+     * Verify the links via the HEAD request.
+     *
+     * @param  {Array} links   - The links.
+     * @param  {Array} baseUrl - The base url.
+     */
+    function verifyLinks(links, baseUrl) {
         links.forEach((link, index) => {
-            let url = resolve($baseUrl.val(), link);
-            let request = $.ajax({
+            const url = resolve(baseUrl, link);
+
+            const request = $.ajax({
                 method: 'HEAD',
                 url: url
             });
@@ -100,13 +184,34 @@ $(document).ready(() => {
                 });
             });
         });
+    }
+
+    /** Validate the links before making the requests. */
+    $('#search').click((event) => {
+        event.preventDefault();
+
+        const baseUrl = $baseUrl.val().trim();
+        const links = $textarea.val().trim().split('\n');
+        validLinks = getUrls('valid', links, baseUrl);
+        invalidLinks = getUrls('invalid', links, baseUrl);
+
+        if (invalidLinks.length) {
+            const content = generateModalContent(invalidLinks);
+            $modalTitle.text(content.title);
+            $modalBody.html(content.body);
+            $modal.modal('show');
+        } else {
+            $tbody.empty();
+            $resultTab.tab('show');
+            verifyLinks(links, baseUrl);
+        }
     });
 
     /** Filter the results. */
     $filter.keyup(() => {
-        let $tr = $tbody.find('tr');
+        const $tr = $tbody.find('tr');
         $tr.hide();
-        let filterText = $filter.val().toLowerCase();
+        const filterText = $filter.val().toLowerCase();
         $tr.filter(function() {
             return $(this).text().indexOf(filterText) > -1;
         }).show();

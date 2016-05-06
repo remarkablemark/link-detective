@@ -25,7 +25,8 @@
   },
   "dependencies": {
     "bootstrap": "^3.3.6",
-    "jquery": "^2.2.3"
+    "jquery": "^2.2.3",
+    "valid-url": "^1.0.9"
   },
   "devDependencies": {
     "electron-debug": "^0.6.0",
