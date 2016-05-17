@@ -1,0 +1,32 @@
+os:
+    - linux
+    - osx
+
+language: node_js
+
+node_js:
+    - '4'
+
+sudo: false # https://docs.travis-ci.com/user/migrating-from-legacy/
+
+addons:
+    apt:
+        packages:
+            - xvfb
+
+install:
+    - npm install
+
+before_script:
+    - export DISPLAY=':99.0' # electron looks at $DISPLAY on start up
+    - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+script:
+    - npm test
+
+cache:
+    directories:
+        - node_modules
+
+notifications:
+    email: false
