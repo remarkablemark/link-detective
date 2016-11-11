@@ -4,5 +4,13 @@
         "browser": true,
         "es6": true,
         "mocha": true
+    },
+
+    "parserOptions": {
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true,
+            "experimentalObjectRestSpread": true
+        }
     }
 }

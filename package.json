@@ -24,11 +24,18 @@
     "url": "https://github.com/remarkablemark/link-detective"
   },
   "dependencies": {
+    "babel-preset-es2015": "^6.13.2",
+    "babel-register": "^6.11.6",
     "bootstrap": "^3.3.6",
     "jquery": "^2.2.3",
+    "material-ui": "^0.15.4",
+    "react": "^15.3.0",
+    "react-dom": "^15.3.0",
+    "react-tap-event-plugin": "^1.0.0",
     "valid-url": "^1.0.9"
   },
   "devDependencies": {
+    "babel-preset-react": "^6.11.1",
     "electron-debug": "^0.6.0",
     "electron-prebuilt": "^0.37.2",
     "electron-reload": "^0.3.0",
